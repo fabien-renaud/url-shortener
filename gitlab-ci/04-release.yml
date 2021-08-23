@@ -1,0 +1,38 @@
+create-release-branch:
+  stage: release
+  extends: .common
+  rules:
+    - if: '$CI_COMMIT_REF_NAME =~ /develop/ '
+      when: manual
+  script:
+    # Create release branch
+    - RELEASE_VERSION=$(sh $SCRIPTS_DIR/get-release-version.sh)
+    - git checkout -b release/$RELEASE_VERSION
+    # Bump to release version
+    - ./$SCRIPTS_DIR/bump-release-version.sh
+    - git commit -am "Bump version to $RELEASE_VERSION"
+    - git tag -a $RELEASE_VERSION -m "Release version $RELEASE_VERSION"
+    - git push origin release/$RELEASE_VERSION
+    - git push origin $RELEASE_VERSION
+
+merge-release-branch:
+  stage: release
+  extends: .common
+  rules:
+    - if: '$CI_COMMIT_REF_NAME =~ /^release/ '
+      when: manual
+  script:
+    - BRANCH_VERSION=$(sh $SCRIPTS_DIR/get-release-version.sh)
+    # Bump to next minor SNAPSHOT version
+    - ./$SCRIPTS_DIR/bump-snapshot-version.sh MINOR
+    - SNAPSHOT_VERSION=$(sh $SCRIPTS_DIR/get-version.sh)
+    - git commit -am "Bump version to $SNAPSHOT_VERSION"
+    - git push -o ci.skip origin release/$BRANCH_VERSION
+    # Merge release branch on develop
+    - git checkout develop
+    - git merge release/$BRANCH_VERSION
+    - git push -o ci.skip origin develop
+    # Merge release branch on master
+    - git checkout master
+    - git merge release/$BRANCH_VERSION
+    - git push -o ci.skip origin master

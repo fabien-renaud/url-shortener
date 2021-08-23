@@ -1,0 +1,8 @@
+test:
+  stage: test
+  script:
+    - docker load -i $CI_IMAGE:$CI_PIPELINE_ID-test.tar
+    - docker run --rm $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-test
+  only:
+    - develop
+    - /^release/

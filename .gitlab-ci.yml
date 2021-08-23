@@ -1,0 +1,36 @@
+variables:
+  SCRIPTS_DIR: 'gitlab-ci/scripts'
+
+default:
+  image: $CI_RUNNER_IMAGE
+  services:
+    - docker:dind
+
+stages:
+  - build
+  - test
+  - publish
+  - release
+
+.common:
+  before_script:
+    - find $SCRIPTS_DIR -name '*.sh' -exec chmod 777 {} \;
+    - find . -name 'package*.json' -exec chmod 777 {} \;
+    # Initialize git
+    - which ssh-agent || (apk update && apk add openssh-client)
+    - eval $(ssh-agent -s)
+    - echo "$CI_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+    - git config user.email "gitlab@gitlab.com" && git config user.name "GitLab"
+    - git remote set-url origin git@gitlab.com:$CI_PROJECT_PATH
+    - git fetch origin
+    - git checkout $CI_COMMIT_REF_NAME
+    # Don't commit fileMode changes
+    - git config core.fileMode false
+
+include:
+  - local: 'gitlab-ci/01-build.yml'
+  - local: 'gitlab-ci/02-test.yml'
+  - local: 'gitlab-ci/03-publish.yml'
+  - local: 'gitlab-ci/04-release.yml'

@@ -1,0 +1,30 @@
+build:
+  stage: build
+  extends: .common
+  script:
+    # Docker caching: pull latest image to reuse commons layers
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    # Build image for test
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest
+                   -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-test
+                   --target test .
+    - docker save -o $CI_IMAGE:$CI_PIPELINE_ID-test.tar
+                     $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-test
+    # Build image for publish
+    - VERSION=$(sh $SCRIPTS_DIR/get-version.sh)
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest
+                   -t $CI_REGISTRY_IMAGE:$VERSION
+                   -t $CI_REGISTRY_IMAGE:latest
+                   --target release .
+    - docker save -o $CI_IMAGE:$CI_PIPELINE_ID.tar
+                     $CI_REGISTRY_IMAGE:$VERSION
+                     $CI_REGISTRY_IMAGE:latest
+  artifacts:
+    paths:
+      - ./$CI_IMAGE:$CI_PIPELINE_ID-test.tar
+      - ./$CI_IMAGE:$CI_PIPELINE_ID.tar
+    expire_in: '1 hour'
+    when: always
+  only:
+    - develop
+    - /^release/

@@ -1,0 +1,15 @@
+{
+    "extends": ["airbnb-base", "node", "prettier"],
+    "plugins": ["prettier"],
+    "settings": {
+        "import/resolver": {
+            "node": {"extensions": [".js"]}
+        }
+    },
+    "rules": {
+        "arrow-body-style": "off",
+        "indent": ["error", 4, {"SwitchCase": 1}],
+        "import/prefer-default-export": "off",
+        "prettier/prettier": ["error"]
+    }
+}

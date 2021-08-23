@@ -1,0 +1,6 @@
+{
+    "name": "link-api",
+    "collectCoverage": true,
+    "verbose": true,
+    "testPathIgnorePatterns": ["/dist"]
+}
