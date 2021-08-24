@@ -1,7 +1,7 @@
 {
-    "name": "link-api",
+    "name": "url-shortener",
     "version": "0.1.0",
-    "description": "Link and QR Code generator API",
+    "description": "URL shortener and QR Code generator API",
     "main": "src/core/server.js",
     "scripts": {
         "build": "babel src -d dist --copy-files",
@@ -38,12 +38,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/fabien-renaud/link-api.git"
+        "url": "git+https://github.com/fabien-renaud/url-shortener.git"
     },
     "author": "fabien-renaud",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/fabien-renaud/link-api/issues"
+        "url": "https://github.com/fabien-renaud/url-shortener/issues"
     },
-    "homepage": "https://github.com/fabien-renaud/link-api#readme"
+    "homepage": "https://github.com/fabien-renaud/url-shortener#readme"
 }

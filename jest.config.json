@@ -1,5 +1,5 @@
 {
-    "name": "link-api",
+    "name": "url-shortener",
     "collectCoverage": true,
     "verbose": true,
     "testPathIgnorePatterns": ["/dist"]
