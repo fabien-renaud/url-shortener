@@ -10,6 +10,7 @@
         "arrow-body-style": "off",
         "indent": ["error", 4, {"SwitchCase": 1}],
         "import/prefer-default-export": "off",
+        "no-console": "off",
         "prettier/prettier": ["error"]
     }
 }
