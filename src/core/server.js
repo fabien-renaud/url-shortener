@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import routes from '../presentation';
+import routes, {redirect} from '../presentation';
 
 const server = express();
 const port = process.env.SERVER_PORT || 3000;
@@ -17,5 +17,6 @@ server.use('*', (req, res, next) => {
 });
 
 server.use('/api', routes);
+server.use('/', redirect);
 
 export default server;

@@ -18,6 +18,10 @@ const URLModel = database.define(
             type: STRING,
             allowNull: false
         },
+        hash: {
+            type: STRING,
+            allowNull: false
+        },
         qr_code_url: {
             type: TEXT,
             allowNull: false
