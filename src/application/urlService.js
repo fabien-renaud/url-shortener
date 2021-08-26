@@ -5,9 +5,12 @@ import {urlRepository} from '../infrastructure';
 
 const generateHash = customAlphabet('1234567890abcedfABCDEF', 10);
 
-const generateQRCode = (shortenedUrl) => QRCode.toDataURL(shortenedUrl);
+const generateQRCode = (shortenedUrl) => QRCode.toDataURL(shortenedUrl, {
+    scale: 10,
+    margin: 1
+});
 
-const findUrlByHash = hash => {
+const findUrlByHash = (hash) => {
     return urlRepository.findUrlByHash(hash);
 };
 
